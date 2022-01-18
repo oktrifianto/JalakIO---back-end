@@ -1,6 +1,18 @@
 from flask import Flask, jsonify
+from dotenv import load_dotenv
+load_dotenv()
+import os
+from flaskext.mysql import MySQL
 
 app = Flask(__name__)
+
+# MySQL config #
+mysql = MySQL()
+app.config['MYSQL_DATABASE_USER']     = os.getenv("DB_USER")
+app.config['MYSQL_DATABASE_PASSWORD'] = os.getenv("DB_PASS")
+app.config['MYSQL_DATABASE_DB']       = os.getenv("DB_NAME")
+app.config['MYSQL_DATABASE_HOST']     = os.getenv("DB_HOST")
+mysql.init_app(app)
 
 @app.route("/")
 def hello_world():
@@ -17,3 +29,12 @@ def register():
 @app.route("/api/login")
 def login():
   return jsonify("login here please!")
+
+@app.route("/api/dbtest")
+def get_db():
+  # return jsonify("DB here!")
+  conn  = mysql.connect()
+  csr   = conn.cursor()
+  csr.execute('SELECT * FROM customers')  # my own table
+  data  = csr.fetchall()
+  return jsonify(data)
