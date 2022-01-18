@@ -26,15 +26,17 @@ def hello_world():
 def register():
   return jsonify("register here")
 
-@app.route("/api/login")
+@app.route("/api/login") # this is should POST method
 def login():
   return jsonify("login here please!")
 
 @app.route("/api/dbtest")
 def get_db():
-  # return jsonify("DB here!")
-  conn  = mysql.connect()
-  csr   = conn.cursor()
-  csr.execute('SELECT * FROM customers')  # my own table
-  data  = csr.fetchall()
-  return jsonify(data)
+  try:
+    conn  = mysql.connect()
+    csr   = conn.cursor()
+    csr.execute('SELECT * FROM customers')  # my own table
+    data  = csr.fetchall()
+    return jsonify(data)
+  except:
+    return jsonify("Can not find database")
