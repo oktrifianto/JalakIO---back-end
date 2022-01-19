@@ -1,0 +1,51 @@
+
+=========== MySQL Command Example =======
+
+
+================================
+# Show Table Fields (type, key, etc.)
+================================
+
+$ SHOW FIELDS FROM users;
+
+  +-----------+--------------+------+-----+---------+----------------+
+  | Field     | Type         | Null | Key | Default | Extra          |
+  +-----------+--------------+------+-----+---------+----------------+
+  | id        | int          | NO   | PRI | NULL    | auto_increment |
+  | username  | varchar(255) | YES  |     | NULL    |                |
+  | email     | varchar(255) | YES  |     | NULL    |                |
+  | password  | varchar(255) | YES  |     | NULL    |                |
+  | firstname | varchar(255) | YES  |     | NULL    |                |
+  | lastname  | varchar(255) | YES  |     | NULL    |                |
+  | address   | varchar(255) | YES  |     | NULL    |                |
+  +-----------+--------------+------+-----+---------+----------------+
+  7 rows in set (0.00 sec)
+
+
+================================
+# ALL TABLES
+================================
+
+$ SHOW FULL TABLES;
+  +---------------------+------------+
+  | Tables_in_python_db | Table_type |
+  +---------------------+------------+
+  | customers           | BASE TABLE |
+  | products            | BASE TABLE |
+  | users               | BASE TABLE |
+  +---------------------+------------+
+  3 rows in set (0.00 sec)
+
+
+======================
+# CREATE TABLE 
+======================
+
+$ CREATE TABLE users (id INT AUTO_INCREMENT PRIMARY KEY, 
+  username VARCHAR(255), 
+  email VARCHAR(255), 
+  password VARCHAR(255), 
+  firstname VARCHAR(255), 
+  lastname VARCHAR(255), 
+  address VARCHAR(255)
+  );
