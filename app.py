@@ -1,4 +1,4 @@
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
 from dotenv import load_dotenv
 load_dotenv()
 import os
@@ -23,9 +23,25 @@ def hello_world():
   }
   return jsonify({"data": x})
 
-@app.route("/api/register")
+@app.route("/api/register", methods = ['POST', "GET"])
 def register():
-  return jsonify("register here")
+  if request.method == 'GET':
+    return jsonify("get register")
+
+  if request.method == 'POST':
+    """
+    New user will register here
+    * submit json data (example) @via CURL
+      {
+          "firstname" : "John",
+          "email"     : "john@email.com"
+      }
+    """
+    data    = request.get_json(force=True)
+    email   = data['email']
+    fsname  = data['firstname']
+    return fsname
+    # return jsonify('it is post method')
 
 @app.route("/api/login") # this is should POST method
 def login():
