@@ -3,6 +3,7 @@ from dotenv import load_dotenv
 load_dotenv()
 import os
 from flaskext.mysql import MySQL
+from markupsafe import escape
 
 app = Flask(__name__)
 
@@ -30,13 +31,46 @@ def register():
 def login():
   return jsonify("login here please!")
 
-@app.route("/api/dbtest")
-def get_db():
+@app.route("/api/user")
+def show_users():
   try:
     conn  = mysql.connect()
     csr   = conn.cursor()
-    csr.execute('SELECT * FROM customers')  # my own table
+    query = 'SELECT * FROM customers'  # my own table
+    csr.execute(query) 
     data  = csr.fetchall()
-    return jsonify(data)
+    return jsonify(
+      data=data
+    )
   except:
     return jsonify("Can not find database")
+
+@app.route("/api/user/<username>")
+def show_single_user(username):
+  try:
+    conn  = mysql.connect()
+    csr   = conn.cursor()
+    query = f'SELECT * FROM customers WHERE name="{escape(username)}"'
+    count = csr.execute(query) # done
+    # print(count)    # debug only
+    data  = csr.fetchall()
+    if count > 0:
+      return jsonify(
+        data=data
+      )
+    else: 
+      return jsonify({"data : [name not found]"})
+  except:
+    return jsonify("db not found")
+
+
+@app.route("/api/db-products")
+def get_products():
+  try:
+    conn  = mysql.connect()
+    csr   = conn.cursor()
+    csr.execute('SELECT * FROM products')
+    data  = csr.fetchall()
+    return jsonify(f"data : {data}")
+  except:
+    return jsonify('data : 404')
