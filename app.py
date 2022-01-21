@@ -2,18 +2,23 @@ from flask import Flask, jsonify, request
 from dotenv import load_dotenv
 load_dotenv()
 import os
-from flaskext.mysql import MySQL
+# from flaskext.mysql import MySQL
 from markupsafe import escape
+from config.database import mysql        # config/database.py
+from routes.users import app_user        # routes/users.py
 
 app = Flask(__name__)
 
-# MySQL config #
-mysql = MySQL()
+### MySQL configuration
+# mysql = MySQL()
 app.config['MYSQL_DATABASE_USER']     = os.getenv("DB_USER")
 app.config['MYSQL_DATABASE_PASSWORD'] = os.getenv("DB_PASS")
 app.config['MYSQL_DATABASE_DB']       = os.getenv("DB_NAME")
 app.config['MYSQL_DATABASE_HOST']     = os.getenv("DB_HOST")
 mysql.init_app(app)
+
+### register blueprints
+app.register_blueprint(app_user)
 
 @app.route("/")
 def hello_world():
