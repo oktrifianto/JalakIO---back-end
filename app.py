@@ -42,29 +42,36 @@ def register():
           "email"     : "john@email.com"
       }
     """
-    data    = request.get_json(force=True)
-    email   = data['email']
-    fsname  = data['firstname']
-    return fsname
-    # return jsonify('it is post method')
+    regdata   = request.get_json(force=True)
+    data      = {
+      "data"    : regdata,
+      "message" : "New user has been created!",
+      "status"  : 200,
+    }
+    return jsonify(data)
 
 @app.route("/api/login") # this is should POST method
 def login():
   return jsonify("login here please!")
 
-@app.route("/api/user")
+@app.route("/api/users")
 def show_users():
   try:
     conn  = mysql.connect()
     csr   = conn.cursor()
     query = 'SELECT * FROM customers'  # my own table
     csr.execute(query) 
-    data  = csr.fetchall()
-    return jsonify(
-      data=data
-    )
+    ndata  = csr.fetchall()
+    data    = {
+      "data" : ndata,
+      "status" : 200
+    }
+    return jsonify(data)
   except:
-    return jsonify("Can not find database")
+    return jsonify(
+      data=[],
+      status=404
+    )
 
 @app.route("/api/user/<username>")
 def show_single_user(username):
@@ -77,12 +84,14 @@ def show_single_user(username):
     data  = csr.fetchall()
     if count > 0:
       return jsonify(
-        data=data
+        data=data,
+        status=200
       )
-    else: 
-      return jsonify({"data : [name not found]"})
   except:
-    return jsonify("db not found")
+    return jsonify(
+      data=[],
+      status=404
+    )
 
 
 @app.route("/api/db-products")
@@ -92,6 +101,13 @@ def get_products():
     csr   = conn.cursor()
     csr.execute('SELECT * FROM products')
     data  = csr.fetchall()
-    return jsonify(f"data : {data}")
+    return jsonify(
+      data=data,
+      status=200
+    )
+    # return jsonify(f"data : {data}")
   except:
-    return jsonify('data : 404')
+    return jsonify(
+      data=[],
+      status=404
+    )
